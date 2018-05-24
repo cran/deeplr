@@ -1,0 +1,13 @@
+9b4377babe8b5eaeaa15b5c2059f3342 *DESCRIPTION
+adfbc74c0688229604e33486d1468b68 *NAMESPACE
+ba3b3a1fc9f7056302e50ec79aa00bd2 *R/to.R
+92977f500389823d424f80afe85eda8a *R/translate.R
+ca89ed457443c5e47347d357d7a027fb *R/utils.R
+05b0c8a8be0902ef569bcffd1e59e4f7 *man/toDutch.Rd
+d89f0ad535377306355173292b439f0c *man/toEnglish.Rd
+c6a82c10a0a4b4a4af3bd0aaf9001bb5 *man/toFrench.Rd
+6cd03679e8c64d27c60d752fa05eab5b *man/toGerman.Rd
+6051b5d3c83c0543a7820d3c3fec8399 *man/toItalian.Rd
+ce5ba40067f80c312efc9aa32d1db804 *man/toPolish.Rd
+31cfa6e5413d4d1a3dff4ed138b08a40 *man/toSpanish.Rd
+fb40f4c6a422f8ca9d47a0581542826f *man/translate.Rd

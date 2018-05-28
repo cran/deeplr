@@ -1,17 +1,17 @@
-#' Issue a DeepL Translator API query
+#' Translate texts using the official DeepL Translator API
 #'
-#' \code{translate} calls the DeepL Translator API and translates texts between English, German,
-#'     French, Spanish, Italian, Dutch and Polish.
+#' \code{translate2} translates texts between English, German, French, Spanish, Italian, Dutch and Polish
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
 #'     The request size should not exceed 30kbytes.
-#' @param source_lang language of the text to be translated (see below). If parameter \code{is.null}, the API will detect
-#'     the language of the text and translate it.
+#' @param source_lang language of the text to be translated (see below). If parameter \code{is.null}, the API will try to detect
+#'     the language of the source.
 #' @param target_lang language into which to translate. Can be one of the following:
 #' \itemize{
 #' \item \code{EN} English
@@ -30,7 +30,7 @@
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepLauthentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -69,23 +69,26 @@ translate <- function(text, source_lang = NULL, target_lang = "EN", tag_handling
                       auth_key = "your_key") {
 
   # Text prep -------------------------------------------------------------------------------------
-  text_check(text)
+  text <- text_check(text)
 
-  # Logical to numeric ----------------------------------------------------------------------------
-  split_sentences <- as.numeric(split_sentences)
-  preserve_formatting <- as.numeric(preserve_formatting)
+  # Generate body for POST request ----------------------------------------------------------------
+  body <- paste0(
+    "auth_key=", auth_key,
+    "&text=", utils::URLencode(text),
+    "&target_lang=", target_lang,
+    if (!is.null(split_sentences)) "&split_sentences=", as.numeric(split_sentences),
+    if (!is.null(preserve_formatting)) "&preserve_formatting=", as.numeric(preserve_formatting),
+    if (!is.null(source_lang)) "&source_lang=", source_lang,
+    if (!is.null(tag_handling)) "&tag_handling=", tag_handling
+  )
 
   # DeepL API call --------------------------------------------------------------------------------
-  response <- httr::GET(
+  response <- httr::POST(
     "https://api.deepl.com/v1/translate",
-    query = list(
-      text = text,
-      source_lang = source_lang,
-      target_lang = target_lang,
-      tag_handling = tag_handling,
-      split_sentences = split_sentences,
-      preserve_formatting = preserve_formatting,
-      auth_key = auth_key
+    body = body,
+    httr::add_headers(
+      "Content-Type" = "application/x-www-form-urlencoded",
+      "Content-Length" = nchar(body)
     )
   )
 

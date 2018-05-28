@@ -2,7 +2,7 @@
 % Please edit documentation in R/translate.R
 \name{translate}
 \alias{translate}
-\title{Issue a DeepL Translator API query}
+\title{Translate texts using the official DeepL Translator API}
 \usage{
 translate(text, source_lang = NULL, target_lang = "EN",
   tag_handling = NULL, split_sentences = TRUE,
@@ -12,8 +12,8 @@ translate(text, source_lang = NULL, target_lang = "EN",
 \item{text}{text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
 The request size should not exceed 30kbytes.}
 
-\item{source_lang}{language of the text to be translated (see below). If parameter \code{is.null}, the API will detect
-the language of the text and translate it.}
+\item{source_lang}{language of the text to be translated (see below). If parameter \code{is.null}, the API will try to detect
+the language of the source.}
 
 \item{target_lang}{language into which to translate. Can be one of the following:
 \itemize{
@@ -38,7 +38,7 @@ and end of the sentence, upper/lower case at the beginning of the sentence) of t
 \item{get_detect}{if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.}
 
-\item{auth_key}{your \code{DeepL} authentication key which provides access to the API.}
+\item{auth_key}{DeepLauthentication key which provides access to the API.}
 }
 \value{
 If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation is returned. Otherwise,
@@ -49,8 +49,8 @@ If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing
 }
 }
 \description{
-\code{translate} calls the DeepL Translator API and translates texts between English, German,
-    French, Spanish, Italian, Dutch and Polish.
+\code{translate2} translates texts between English, German, French, Spanish, Italian, Dutch and Polish
+    using the official DeepL Translator API. To use this service, an authentication key is required.
 }
 \details{
 To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).

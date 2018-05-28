@@ -1,11 +1,11 @@
-#' Translate a text into English with the DeepL Translator API
+#' Translate texts into English using the official DeepL Translator API
 #'
-#' \code{toEnglish} calls the \code{DeepL} translator API and translates a text from German, French,
-#'     Spanish, Italian, Dutch or Polish into English.
+#' \code{toEnglish} translates a text from German, French, Spanish, Italian, Dutch or Polish into English
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -19,7 +19,7 @@
 #' \item \code{NL} Dutch
 #' \item \code{PL} Polish
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source.
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -28,7 +28,7 @@
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -72,14 +72,14 @@ toEnglish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 
 }
 
-#' Translate a text into German with the DeepL Translator API
+#' Translate texts into German using the official DeepL Translator API
 #'
-#' \code{toGerman} calls the \code{DeepL} translator API and translates a text from English, French,
-#'     Spanish, Italian, Dutch or Polish into German.
+#' \code{toGerman} translates a text from English, French, Spanish, Italian, Dutch or Polish into German
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -93,7 +93,7 @@ toEnglish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #' \item \code{NL} Dutch
 #' \item \code{PL} Polish
 #'  }
-#' If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#' If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -102,7 +102,7 @@ toEnglish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -146,14 +146,14 @@ toGerman <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 
 }
 
-#' Translate a text into French with the DeepL Translator API
+#' Translate texts into French using the official DeepL Translator API
 #'
-#' \code{toFrench} calls the \code{DeepL} translator API and translates a text from English, German,
-#'     Spanish, Italian, Dutch or Polish into French.
+#' \code{toFrench} translates a text from English, German, Spanish, Italian, Dutch or Polish into French
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -167,7 +167,7 @@ toGerman <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 #' \item \code{NL} Dutch
 #' \item \code{PL} Polish
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -176,7 +176,7 @@ toGerman <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -219,14 +219,14 @@ toFrench <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 
 }
 
-#' Translate a text into Spanish with the DeepL Translator API
+#' Translate texts into Spanish using the official DeepL Translator API
 #'
-#' \code{toSpanish} calls the \code{DeepL} translator API and translates a text from English, German,
-#'     French, Italian, Dutch or Polish into Spanish.
+#' \code{toSpanish} translates a text from English, German, French, Italian, Dutch or Polish into Spanish
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -240,7 +240,7 @@ toFrench <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 #' \item \code{NL} Dutch
 #' \item \code{PL} Polish
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -249,7 +249,7 @@ toFrench <- function(text, source_lang = NULL, tag_handling = NULL, split_senten
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -293,14 +293,14 @@ toSpanish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 
 }
 
-#' Translate a text into Italian with the DeepL Translator API
+#' Translate texts into Italian using the official DeepL Translator API
 #'
-#' \code{toItalian} calls the \code{DeepL} translator API and translates a text from English, German,
-#'     French, Spanish, Dutch or Polish into Italian.
+#' \code{toItalian} translates a text from English, German, French, Spanish, Dutch or Polish into Italian
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -314,7 +314,7 @@ toSpanish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #' \item \code{NL} Dutch
 #' \item \code{PL} Polish
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -323,7 +323,7 @@ toSpanish <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -366,14 +366,14 @@ toItalian <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 
 }
 
-#' Translate a text into Dutch with the DeepL Translator API
+#' Translate texts into Dutch using the official DeepL Translator API
 #'
-#' \code{toDutch} calls the \code{DeepL} translator API and translates a text from English, German,
-#'     French, Spanish, Italian or Polish into Dutch.
+#' \code{toDutch} translates a text from English, German, French, Spanish, Italian or Polish into Dutch
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -387,7 +387,7 @@ toItalian <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #' \item \code{IT} Italian
 #' \item \code{PL} Polish
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -396,7 +396,7 @@ toItalian <- function(text, source_lang = NULL, tag_handling = NULL, split_sente
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
@@ -439,14 +439,14 @@ toDutch <- function(text, source_lang = NULL, tag_handling = NULL, split_sentenc
 
 }
 
-#' Translate a text into Polish with the DeepL Translator API
+#' Translate texts into Polish using the official DeepL Translator API
 #'
-#' \code{toPolish} calls the \code{DeepL} translator API and translates a text from English, German,
-#'     French, Spanish, Italian or Dutch into Polish.
+#' \code{toPolish} translates a text from English, German, French, Spanish, Italian or Dutch into Polish
+#'     using the official DeepL Translator API. To use this service, an authentication key is required.
 #'
 #' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom utils object.size
-#' @importFrom httr GET status_code content
+#' @importFrom utils URLencode
+#' @importFrom httr POST add_headers status_code content
 #' @importFrom tibble tibble
 #'
 #' @param text text to be translated. Only UTF8-encoded plain text is supported. May contain multiple sentences.
@@ -460,7 +460,7 @@ toDutch <- function(text, source_lang = NULL, tag_handling = NULL, split_sentenc
 #' \item \code{IT} Italian
 #' \item \code{NL} Dutch
 #'  }
-#'     If parameter \code{is.null}, the API will detect the language of the text and translate it.
+#'     If parameter \code{is.null}, the API will try to detect the language of the source
 #' @param tag_handling if set to \code{"xml"}, the translation engine tries to find matches for XML enclosed words in
 #'     the translated sentence and enclose them with the same tags. If no matching words are found, the tags are removed.
 #' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences. If only one sentence
@@ -469,7 +469,7 @@ toDutch <- function(text, source_lang = NULL, tag_handling = NULL, split_sentenc
 #'     and end of the sentence, upper/lower case at the beginning of the sentence) of the formatting.
 #' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
 #'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @param auth_key your \code{DeepL} authentication key which provides access to the API.
+#' @param auth_key DeepL authentication key which provides access to the API.
 #'
 #' @details To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
 #'     This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see

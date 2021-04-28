@@ -2,30 +2,27 @@
 % Please edit documentation in R/usage.R
 \name{usage}
 \alias{usage}
-\title{Retrieve current usage data of a DeepL Pro account}
+\title{Usage data of a DeepL API Pro account}
 \usage{
 usage(auth_key = "your_key")
 }
 \arguments{
-\item{auth_key}{authentication key of the corresponding DeepL Pro account.}
+\item{auth_key}{authentication key of the corresponding DeepL API Pro account.}
 }
 \description{
-\code{usage} returns the character usage and the configured limit for the current period of a DeepL Pro Account.
+\code{usage} returns the character usage and the configured limit for the current period of
+    a DeepL API Pro account.
 }
 \details{
-To get an authentication key, you need to register for a DeepL Pro account (\url{https://www.deepl.com/pro.html}).
-    This currently costs 20 euros per month and allows the translation of 1,000,000 characters per month (see
-    \url{https://www.deepl.com/pro-pricing.html}).
+To get an authentication key, you need to register for a DeepL API Pro
+    account (\url{https://www.deepl.com/pro#developer}).
 }
 \examples{
-\donttest{
-# Simple translation
+\dontrun{
 usage(auth_key = "my_key")
-
 }
-
 
 }
 \references{
-\href{https://www.deepl.com/api.html}{DeepL API documentations}
+\href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 }

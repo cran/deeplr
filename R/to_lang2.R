@@ -1,407 +1,503 @@
-#' Translate texts into English using DeepL
+#' Translate texts into English using DeepL API Free
 #'
-#' \code{toEnglish2} translates a text from German, French, Spanish, Italian, Dutch or Polish into English
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toEnglish2} translates a text from an available language into English
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{DE} German
-#' \item \code{FR} French
-#' \item \code{ES} Spanish
-#' \item \code{IT} Italian
-#' \item \code{NL} Dutch
-#' \item \code{PL} Polish
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toEnglish2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toEnglish2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("Mein Name ist Albert.", "Ich bin Physiker.", "Ich wurde 1879 in Ulm geboren.")
-#' purrr::map_chr(txt1, toEnglish2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Me llamo Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
-#' translator2 <- function(t) toEnglish2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("Me llamo Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toEnglish2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
 #'
-toEnglish2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+toEnglish2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "EN", get_detect = get_detect)
+  translate2(text = text, target_lang = "EN", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into German using DeepL
+#' Translate texts into German using DeepL API Free
 #'
-#' \code{toGerman2} ranslates a text from English, French, Spanish, Italian, Dutch or Polish into German
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toGerman2} translates a text from an available language into German
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{FR} French
-#' \item \code{ES} Spanish
-#' \item \code{IT} Italian
-#' \item \code{NL} Dutch
-#' \item \code{PL} Polish
-#'  }
-#' If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toGerman2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toGerman2("Hello world!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toGerman2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Me llamo Fred.", "Je suis médecin.", "I'm from Wales")
-#' translator2 <- function(t) toGerman2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("Me llamo Fred.", "Je suis médecin.", "I'm from Brisbane.")
+#' toGerman2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
 #'
-toGerman2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+toGerman2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "DE", get_detect = get_detect)
+  translate2(text = text, target_lang = "DE", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into French using DeepL
+#' Translate texts into French using DeepL API Free
 #'
-#' \code{toFrench2} ranslates a text from English, German, Spanish, Italian, Dutch or Polish into French
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toFrench2} translates a text from an available language into French
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{DE} German
-#' \item \code{ES} Spanish
-#' \item \code{IT} Italian
-#' \item \code{NL} Dutch
-#' \item \code{PL} Polish
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toFrench2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toFrench2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toFrench2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Me llamo Fred.", "Ich bin Arzt.", "I'm from Wales")
-#' translator2 <- function(t) toFrench2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("Me llamo Fred.", "I'm a doctor.", "Ich komme aus der Schweiz.")
+#' toFrench2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
-toFrench2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+#'
+toFrench2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "FR", get_detect = get_detect)
+  translate2(text = text, target_lang = "FR", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into Spanish using DeepL
+#' Translate texts into Italian using DeepL API Free
 #'
-#' \code{toSpanish2} ranslates a text from English, German, French, Italian, Dutch or Polish into Spanish
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toItalian2} translates a text from an available language into Italian
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null}, the API
+#'     guesses the language of the source. If input is of length 1, the same source language is
+#'     applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{DE} German
-#' \item \code{FR} French
-#' \item \code{IT} Italian
-#' \item \code{NL} Dutch
-#' \item \code{PL} Polish
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toSpanish2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toItalian2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toSpanish2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Je m'appelle Jean.", "Ich bin Arzt.", "I'm from Wales")
-#' translator2 <- function(t) toSpanish2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("Me llamo Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toItalian2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
 #'
-toSpanish2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+toItalian2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "ES", get_detect = get_detect)
+  translate2(text = text, target_lang = "IT", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into Italian using DeepL
+#' Translate texts into Spanish using DeepL API Free
 #'
-#' \code{toItalian2} ranslates a text from English, German, French, Sapnish, Dutch or Polish into Italian
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toSpanish2} translates a text from an available language into Spanish
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{DE} German
-#' \item \code{FR} French
-#' \item \code{ES} Spanish
-#' \item \code{NL} Dutch
-#' \item \code{PL} Polish
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toItalian2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toSpanish2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toItalian2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Je m'appelle Jean.", "Ich bin Arzt.", "I'm from Wales")
-#' translator2 <- function(t) toItalian2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("My name is Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toSpanish2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
-toItalian2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+#'
+toSpanish2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "IT", get_detect = get_detect)
+  translate2(text = text, target_lang = "ES", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into Dutch using DeepL
+#' Translate texts into Japanese using DeepL API Free
 #'
-#' \code{toDutch2} ranslates a text from English, German, French, Sapnish, Italian or Polish into Dutch
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toJapanese2} translates a text from an available language into Japanese
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null}, the API
+#'     guesses the language of the source. If input is of length 1, the same source language is
+#'     applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{DE} German
-#' \item \code{FR} French
-#' \item \code{ES} Spanish
-#' \item \code{IT} Italian
-#' \item \code{PL} Polish
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toDutch2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toJapanese2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toDutch2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Je m'appelle Jean.", "Ich bin Arzt.", "I'm from Wales")
-#' translator2 <- function(t) toDutch2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("My name is Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toJapanese2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
-toDutch2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+#'
+toJapanese2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "NL", get_detect = get_detect)
+  translate2(text = text, target_lang = "JA", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
 
-#' Translate texts into Polish using DeepL
+#' Translate texts into Russian using DeepL API Free
 #'
-#' \code{toPolish2} ranslates a text from English, German, French, Sapnish, Italian or Dutch into Polish
-#'     using the undocumented JSON-RPC DeepL API. No authentication key is required to use this service.
+#' \code{toRussian2} translates a text from an available language into Russian
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
 #'
-#' @importFrom utf8 utf8_valid as_utf8
-#' @importFrom httr POST content
-#' @importFrom rjson toJSON fromJSON
-#' @importFrom tibble tibble
-#' @importFrom purrr map
-#' @importFrom tokenizers tokenize_sentences
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
 #'
-#' @param text text to be translated. Must not exceed 5000 characters. Only UTF8-encoded plain text is supported.
-#'     May contain multiple sentences.
-#' @param source_lang language of the text to be translated. Can be one of the following:
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
 #' \itemize{
-#' \item \code{EN} English
-#' \item \code{DE} German
-#' \item \code{FR} French
-#' \item \code{ES} Spanish
-#' \item \code{IT} Italian
-#' \item \code{NL} Dutch
-#'  }
-#'     If parameter \code{is.null}, the API will try to detect the language of the text.
-#' @param get_detect if \code{TRUE}, the language detected for the source text is also inclued in the response. It corresponds to
-#'     the value of the argument \code{source_lang} if it was specified. If \code{FALSE}, only the translated text is returned.
-#'
-#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the translation
-#'     is returned. Otherwise, a \code{data.frame} (\code{tibble::tibble}) is returned with the following columns:
-#' \itemize{
-#' \item \code{translation} the translated text(s).
+#' \item \code{translation} the translated text.
 #' \item \code{source_lang} detected or specified language of the input text.
 #' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Simple translation
-#' toPolish2("Hallo Welt!")
+#' \dontrun{
+#' # Translate a single text
+#' toRussian2("Hallo Welt!", auth_key = "my_key")
 #'
-#' # Customized translator applied to multiple strings
-#' txt1 <- c("My name is Albert.", "I'm a physicist.", "I was born in 1879 in Ulm.")
-#' purrr::map_chr(txt1, toPolish2)
-#'
-#' # Customized translator applied to multiple strings (with language detection response)
-#' txt2 <- c("Je m'appelle Jean.", "Ich bin Arzt.", "I'm from Wales")
-#' translator2 <- function(t) toPolish2(text = t, get_detect = T)
-#' purrr::map_df(txt2, translator2)
+#' # Translate multiple texts and return the detected language
+#' texts <- c("My name is Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toRussian2(texts, get_detect = T, auth_key = "x")
 #'
 #' }
 #'
-toPolish2 <- function(text, source_lang = NULL, get_detect = FALSE) {
+#'
+toRussian2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                       get_detect = FALSE, auth_key = "your_key") {
 
-  translate2(text = text, source_lang = source_lang, target_lang = "PL", get_detect = get_detect)
+  translate2(text = text, target_lang = "RU", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
+
+}
+
+#' Translate texts into Chinese using DeepL API Free
+#'
+#' \code{toChinese2} translates a text from an available language into Chinese
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
+#'
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
+#'
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
+#' \itemize{
+#' \item \code{translation} the translated text.
+#' \item \code{source_lang} detected or specified language of the input text.
+#' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Translate a single text
+#' toChinese2("Hallo Welt!", auth_key = "my_key")
+#'
+#' # Translate multiple texts and return the detected language
+#' texts <- c("My name is Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toChinese2(texts, get_detect = T, auth_key = "x")
+#'
+#' }
+#'
+#'
+toChinese2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                       get_detect = FALSE, auth_key = "your_key") {
+
+  translate2(text = text, target_lang = "ZH", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
+
+}
+
+#' Translate texts into Portuguese using DeepL API Free
+#'
+#' \code{toPortuguese2} translates a text from an available language into Portuguese
+#'     using DeepL API Free. Use \code{available_languages2} to list all supported languages.
+#'     An authentication key is required to use this service. With the DeepL API Free package,
+#'     developers can translate up to 500,000 characters per month for free.
+#'
+#' @param text character vector to be translated. Only UTF8-encoded plain text is supported.
+#'     An element can contain several sentences, but should not exceed 30kbytes.
+#' @param source_lang language of the text to be translated. If parameter \code{is.null},
+#'     the API guesses the language of the source. If input is of length 1, the same source
+#'     language is applied to all elements.
+#' @param split_sentences if \code{TRUE}, the translation engine splits the input into sentences.
+#'     If only one sentence is translated, it is recommended to set to \code{FALSE} to prevent
+#'     the engine from unintentionally splitting the sentence.
+#' @param preserve_formatting if \code{TRUE}, the translation engine tries to preserve some aspects
+#'     (e.g. punctuation at the beginning and end of the sentence, upper/lower case at the beginning
+#'     of the sentence) of the formatting.
+#' @param get_detect if \code{TRUE}, the language detected for the source text is included in
+#'     the response.
+#' @param auth_key Authentication key.
+#'
+#' @details To get an authentication key, you need to register for a DeepL API Free
+#'     account (\url{https://www.deepl.com/pro#developer}).
+#'
+#' @return If \code{get_detect} is set to \code{FALSE} a \code{character vector} containing the
+#'    translation is returned. Otherwise, a (\code{tibble}) is returned with the following columns:
+#' \itemize{
+#' \item \code{translation} the translated text.
+#' \item \code{source_lang} detected or specified language of the input text.
+#' }
+#'
+#' @references \href{https://www.deepl.com/pro#developer}{DeepL API documentations}
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Translate a single text
+#' toPortuguese2("Hallo Welt!", auth_key = "my_key")
+#'
+#' # Translate multiple texts and return the detected language
+#' texts <- c("My name is Fred.", "Je suis médecin.", "Ich komme aus der Schweiz.")
+#' toPortuguese2(texts, get_detect = T, auth_key = "x")
+#'
+#' }
+#'
+#'
+toPortuguese2 <- function(text, source_lang = NULL, split_sentences = TRUE, preserve_formatting = FALSE,
+                      get_detect = FALSE, auth_key = "your_key") {
+
+  translate2(text = text, target_lang = "PT", source_lang = source_lang, split_sentences = split_sentences,
+            preserve_formatting = preserve_formatting, get_detect = get_detect, auth_key = auth_key)
 
 }
